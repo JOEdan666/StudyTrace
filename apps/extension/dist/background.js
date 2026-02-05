@@ -1,0 +1,1 @@
+chrome.runtime.onInstalled.addListener(()=>{console.log("StudyTrace extension installed")});chrome.action.onClicked.addListener(e=>{chrome.sidePanel.open({windowId:e.windowId})});chrome.sidePanel.setPanelBehavior({openPanelOnActionClick:!0});
