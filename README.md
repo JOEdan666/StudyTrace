@@ -1,5 +1,5 @@
 # StudyTrace
-
+## Hello,I'm JOEdan,a middle school student developer.
 把"网页上零散学习"变成"自动沉淀的知识卡片 + 次日复盘任务单"。
 
 ## 项目结构
