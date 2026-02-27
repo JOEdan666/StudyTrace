@@ -7,7 +7,7 @@
     "build": "vite build && node scripts/gen-icons.js"
   },
   "dependencies": {
-    "@studytrace/shared": "*"
+    "@studytrace/shared": "file:../../packages/shared"
   },
   "devDependencies": {
     "@types/chrome": "^0.0.260",

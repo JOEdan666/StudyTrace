@@ -135,8 +135,9 @@ router.post('/summarize', async (req: Request, res: Response) => {
 
     if ('recordId' in body && body.recordId) {
       // Summarize by recordId
-      recordId = body.recordId;
-      const record = await storage.getRecordById(recordId);
+      const requestedRecordId = body.recordId;
+      recordId = requestedRecordId;
+      const record = await storage.getRecordById(requestedRecordId);
       if (!record) {
         res.status(404).json({ error: 'not_found', message: 'Record not found' });
         return;
@@ -186,8 +187,9 @@ router.post('/summarize/stream', async (req: Request, res: Response) => {
     let recordId: string | undefined;
 
     if ('recordId' in body && body.recordId) {
-      recordId = body.recordId;
-      const record = await storage.getRecordById(recordId);
+      const requestedRecordId = body.recordId;
+      recordId = requestedRecordId;
+      const record = await storage.getRecordById(requestedRecordId);
       if (!record) {
         res.status(404).json({ error: 'not_found', message: 'Record not found' });
         return;
