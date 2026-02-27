@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudyTrace</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      width: 100%;
+      min-width: 320px;
+      max-width: 400px;
+      min-height: 100vh;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(180deg, #e8f4fc 0%, #f0f7fc 50%, #ffffff 100%);
+      color: #37352f;
+      padding: 0;
+      line-height: 1.5;
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, #0ea5e9 0%, #38bdf8 100%);
+      padding: 20px;
+      color: white;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .logo {
+      width: 36px;
+      height: 36px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(10px);
+    }
+
+    .logo svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    .header h1 {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: -0.3px;
+    }
+
+    /* Page Info Card */
+    .page-info {
+      background: rgba(255,255,255,0.95);
+      border-radius: 12px;
+      padding: 14px 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .page-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #37352f;
+      margin-bottom: 4px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .page-domain {
+      font-size: 12px;
+      color: #0ea5e9;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .page-domain::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: #22c55e;
+      border-radius: 50%;
+    }
+
+    /* Content Area */
+    .content {
+      padding: 20px;
+    }
+
+    /* Action Buttons */
+    .actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 14px 20px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(rgba(255,255,255,0.1), transparent);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .btn:hover::after {
+      opacity: 1;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+      color: white;
+      box-shadow: 0 4px 14px rgba(14, 165, 233, 0.4);
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 6px 20px rgba(14, 165, 233, 0.5);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: white;
+      color: #37352f;
+      border: 1.5px solid #e5e5e5;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+    }
+
+    .btn-secondary:hover {
+      border-color: #0ea5e9;
+      color: #0ea5e9;
+      background: #f0f9ff;
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .btn svg {
+      flex-shrink: 0;
+    }
+
+    /* Quick Actions Row */
+    .quick-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .quick-btn {
+      padding: 12px;
+      border-radius: 10px;
+      background: white;
+      border: 1.5px solid #e5e5e5;
+      font-size: 13px;
+      font-weight: 500;
+      color: #6b7280;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .quick-btn:hover {
+      border-color: #0ea5e9;
+      color: #0ea5e9;
+      background: #f0f9ff;
+    }
+
+    .quick-btn svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* Result Card */
+    .result {
+      background: white;
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      border: 1px solid #e5e5e5;
+      animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .result-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .result-icon {
+      width: 28px;
+      height: 28px;
+      background: linear-gradient(135deg, #0ea5e9 0%, #38bdf8 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+    }
+
+    .result-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #37352f;
+    }
+
+    .result-content {
+      font-size: 14px;
+      line-height: 1.7;
+      color: #37352f;
+    }
+
+    .key-points {
+      list-style: none;
+      margin-top: 14px;
+      padding: 12px;
+      background: #f8fafc;
+      border-radius: 8px;
+    }
+
+    .key-points li {
+      font-size: 13px;
+      color: #4b5563;
+      padding: 6px 0 6px 24px;
+      position: relative;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .key-points li:last-child {
+      border-bottom: none;
+    }
+
+    .key-points li::before {
+      content: '';
+      position: absolute;
+      left: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 6px;
+      height: 6px;
+      background: #0ea5e9;
+      border-radius: 50%;
+    }
+
+    .tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .tag {
+      background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      color: #0284c7;
+      border: 1px solid #bae6fd;
+      transition: all 0.2s;
+    }
+
+    .tag:hover {
+      background: #0ea5e9;
+      color: white;
+      border-color: #0ea5e9;
+    }
+
+    /* Status */
+    .status {
+      text-align: center;
+      padding: 24px;
+      color: #6b7280;
+      font-size: 14px;
+    }
+
+    .status.error {
+      color: #ef4444;
+      background: #fef2f2;
+      border-radius: 12px;
+      margin-top: 16px;
+    }
+
+    .status.success {
+      color: #059669;
+      background: #ecfdf5;
+      border-radius: 12px;
+      margin-top: 16px;
+    }
+
+    .spinner {
+      width: 32px;
+      height: 32px;
+      border: 3px solid #e0f2fe;
+      border-top-color: #0ea5e9;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 12px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Footer */
+    .footer {
+      padding: 16px 20px;
+      text-align: center;
+      border-top: 1px solid #e5e5e5;
+      background: white;
+    }
+
+    .footer-text {
+      font-size: 11px;
+      color: #9ca3af;
+    }
+
+    .footer-link {
+      color: #0ea5e9;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .footer-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header with gradient -->
+  <div class="header">
+    <div class="header-top">
+      <div class="logo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2L2 7l10 5 10-5-10-5z" />
+          <path d="M2 17l10 5 10-5" />
+          <path d="M2 12l10 5 10-5" />
+        </svg>
+      </div>
+      <h1>StudyTrace</h1>
+    </div>
+    <div class="page-info">
+      <div class="page-title" id="pageTitle">Loading...</div>
+      <div class="page-domain" id="pageDomain">-</div>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="content">
+    <!-- Main Action -->
+    <div class="actions">
+      <button class="btn btn-primary" id="grabBtn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M12 8v8M8 12h8"/>
+        </svg>
+        抓取并生成摘要
+      </button>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+      <button class="quick-btn" id="cardBtn" disabled>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="18" height="18" rx="2"/>
+          <path d="M3 9h18"/>
+        </svg>
+        保存卡片
+      </button>
+      <button class="quick-btn" id="dashboardBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="9" rx="1"/>
+          <rect x="14" y="3" width="7" height="5" rx="1"/>
+          <rect x="14" y="12" width="7" height="9" rx="1"/>
+          <rect x="3" y="16" width="7" height="5" rx="1"/>
+        </svg>
+        打开面板
+      </button>
+    </div>
+
+    <!-- Status & Results -->
+    <div id="statusArea"></div>
+    <div id="resultArea"></div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <p class="footer-text">
+      点击按钮时才会抓取内容 · <a href="#" class="footer-link" id="helpLink">帮助</a>
+    </p>
+  </div>
+
+  <script type="module" src="./src/popup.ts"></script>
+</body>
+</html>

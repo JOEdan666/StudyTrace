@@ -1,0 +1,61 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model LearningRecord {
+  id          String   @id @default(cuid())
+  url         String
+  title       String
+  domain      String
+  capturedAt  DateTime @default(now())
+  textHash    String?
+  textPreview String?  @db.Text
+  fullText    String?  @db.Text
+  summary     String?  @db.Text
+  keyPoints   String[] @default([])
+  tags        String[] @default([])
+  status      String   @default("created") // created | summarized | failed
+
+  cards       KnowledgeCard[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([domain])
+  @@index([capturedAt])
+}
+
+model KnowledgeCard {
+  id              String   @id @default(cuid())
+  recordId        String
+  record          LearningRecord @relation(fields: [recordId], references: [id], onDelete: Cascade)
+
+  title           String
+  summary         String   @db.Text
+  keyPoints       String[] @default([])
+  terms           Json     @default("[]") // { term: string, definition: string }[]
+  misconceptions  String[] @default([])
+  selfQuiz        Json     @default("[]") // { q: string, a: string, explain: string }[]
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([recordId])
+  @@index([createdAt])
+}
+
+model ReviewPlan {
+  id        String   @id @default(cuid())
+  date      String   // YYYY-MM-DD
+  items     Json     @default("[]") // { title, action, reason, recordId? }[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([date])
+}

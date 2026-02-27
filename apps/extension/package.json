@@ -1,0 +1,17 @@
+{
+  "name": "apps-extension",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite build --watch",
+    "build": "vite build && node scripts/gen-icons.js"
+  },
+  "dependencies": {
+    "@studytrace/shared": "*"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.260",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.12"
+  }
+}
